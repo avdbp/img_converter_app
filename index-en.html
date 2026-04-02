@@ -102,7 +102,7 @@
   text-transform: uppercase;
 }
 
-/* Enlace a versión en inglés (archivo aparte) */
+/* Link to Spanish version (separate file) */
 .lang-link {
   flex-shrink: 0;
   font-family: 'Figtree', system-ui, sans-serif;
@@ -864,8 +864,8 @@ input[type=file] { display: none; }
       <div class="dot dot-y"></div>
       <div class="dot dot-g"></div>
     </div>
-    <div class="app-title" id="appTitle">WEBP — CONVERTIDOR</div>
-    <a href="index-en.html" class="lang-link" hreflang="en">Inglés</a>
+    <div class="app-title" id="appTitle">WEBP — CONVERTER</div>
+    <a href="index.html" class="lang-link" hreflang="es">Español</a>
   </div>
 
   <div class="body">
@@ -873,7 +873,7 @@ input[type=file] { display: none; }
 
       <!-- FORMAT -->
       <div class="sidebar-section">
-        <div class="section-label">Formato de salida</div>
+        <div class="section-label">Output format</div>
         <div class="format-grid">
           <button type="button" class="format-btn active" onclick="setFormat('webp', this)">WebP</button>
           <button type="button" class="format-btn" onclick="setFormat('png', this)">PNG</button>
@@ -883,7 +883,7 @@ input[type=file] { display: none; }
 
       <!-- QUALITY -->
       <div class="sidebar-section">
-        <div class="section-label">Calidad</div>
+        <div class="section-label">Quality</div>
         <div class="quality-wrap">
           <div class="quality-display">
             <span class="quality-num" id="qualVal">82</span>
@@ -891,9 +891,9 @@ input[type=file] { display: none; }
           </div>
           <input type="range" id="qualSlider" min="10" max="100" step="1" value="82">
           <div class="preset-grid">
-            <button type="button" class="preset-btn" onclick="setQual(60, this)">60 — ligero</button>
+            <button type="button" class="preset-btn" onclick="setQual(60, this)">60 — light</button>
             <button type="button" class="preset-btn active" onclick="setQual(82, this)">82 — web</button>
-            <button type="button" class="preset-btn" onclick="setQual(90, this)">90 — alta</button>
+            <button type="button" class="preset-btn" onclick="setQual(90, this)">90 — high</button>
             <button type="button" class="preset-btn" onclick="setQual(100, this)">100 — max</button>
           </div>
         </div>
@@ -901,9 +901,9 @@ input[type=file] { display: none; }
 
       <!-- RENAME -->
       <div class="sidebar-section">
-        <div class="section-label">Renombrar</div>
+        <div class="section-label">Rename</div>
         <label class="rename-header">
-          <span class="rename-header-label">Renombrar archivos</span>
+          <span class="rename-header-label">Rename files</span>
           <span class="toggle-switch">
             <input type="checkbox" id="renameToggle" onchange="toggleRename()" checked>
             <span class="toggle-track"></span>
@@ -911,11 +911,11 @@ input[type=file] { display: none; }
         </label>
         <div id="renameFields" class="rename-fields">
           <div class="rename-row">
-            <span class="rename-label">Prefijo</span>
-            <input class="rename-input" type="text" id="prefixInput" placeholder="ej: foto_" oninput="renderList()">
+            <span class="rename-label">Prefix</span>
+            <input class="rename-input" type="text" id="prefixInput" placeholder="e.g. photo_" oninput="renderList()">
           </div>
           <div class="rename-row">
-            <span class="rename-label">Desde</span>
+            <span class="rename-label">Start at</span>
             <input class="rename-input" type="number" id="startNum" value="1" min="0" style="width:60px;flex:none;" oninput="renderList()">
           </div>
           <div class="rename-preview" id="renamePreview">1.webp, 2.webp, 3.webp…</div>
@@ -924,15 +924,15 @@ input[type=file] { display: none; }
 
       <!-- RESIZE -->
       <div class="sidebar-section">
-        <div class="section-label">Redimensionar</div>
+        <div class="section-label">Resize</div>
         <div class="resize-opts">
           <label class="resize-opt active" id="opt-none">
             <input type="radio" name="resize" value="none" checked onchange="setResize('none')">
-            <span>Sin cambios</span>
+            <span>Original size</span>
           </label>
           <label class="resize-opt" id="opt-maxw">
             <input type="radio" name="resize" value="maxw" onchange="setResize('maxw')">
-            <span>Ancho máximo</span>
+            <span>Max width</span>
           </label>
           <div class="max-width-row" id="maxwRow" style="display:none">
             <input type="number" id="maxWidth" value="1920" min="100" max="9999">
@@ -940,14 +940,14 @@ input[type=file] { display: none; }
           </div>
           <label class="resize-opt" id="opt-50">
             <input type="radio" name="resize" value="50" onchange="setResize('50')">
-            <span>50% del original</span>
+            <span>50% of original</span>
           </label>
         </div>
       </div>
 
       <!-- ACCEPTED FORMATS -->
       <div class="sidebar-section sidebar-footer">
-        <div class="section-label">Formatos aceptados</div>
+        <div class="section-label">Accepted formats</div>
         <div class="formats-chips">
           <span class="format-chip">JPG</span>
           <span class="format-chip">PNG</span>
@@ -957,7 +957,7 @@ input[type=file] { display: none; }
           <span class="format-chip">AVIF</span>
           <span class="format-chip">HEIC*</span>
         </div>
-        <div class="heic-note">*HEIC requiere conversión previa en macOS</div>
+        <div class="heic-note">*HEIC may need prior conversion on macOS</div>
       </div>
 
     </div>
@@ -969,8 +969,8 @@ input[type=file] { display: none; }
         <div class="drop-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <span class="drop-label">Arrastra imágenes aquí</span>
-        <span class="drop-sub">o haz clic para seleccionar</span>
+        <span class="drop-label">Drop images here</span>
+        <span class="drop-sub">or click to browse</span>
       </div>
 
       <div class="progress-bar-wrap" id="progressWrap">
@@ -980,13 +980,13 @@ input[type=file] { display: none; }
       <div class="file-list" id="fileList"></div>
 
       <div class="footer-bar">
-        <span class="stats" id="statsLabel">0 imágenes</span>
-        <button type="button" class="btn-clear" onclick="clearAll()">Limpiar</button>
+        <span class="stats" id="statsLabel">0 images</span>
+        <button type="button" class="btn-clear" onclick="clearAll()">Clear</button>
         <div class="dl-mode">
           <button type="button" class="dl-mode-btn active" onclick="setDlMode('individual', this)">↓ 1:1</button>
           <button type="button" class="dl-mode-btn" onclick="setDlMode('zip', this)">↓ ZIP</button>
         </div>
-        <button type="button" class="btn-convert" id="convertBtn" onclick="startConvert()" disabled>Convertir →</button>
+        <button type="button" class="btn-convert" id="convertBtn" onclick="startConvert()" disabled>Convert →</button>
       </div>
     </div>
   </div>
@@ -1041,16 +1041,16 @@ function toggleRename() {
 }
 
 function updateAppTitle() {
-  const titles = { webp: 'WEBP — CONVERTIDOR', png: 'PNG — CONVERTIDOR', jpg: 'JPG — CONVERTIDOR' };
+  const titles = { webp: 'WEBP — CONVERTER', png: 'PNG — CONVERTER', jpg: 'JPG — CONVERTER' };
   document.getElementById('appTitle').textContent = titles[outputFormat];
 }
 
 function refreshQualityLabel() {
   const q = quality;
-  if (q <= 65) qualLabel.textContent = 'ligero';
+  if (q <= 65) qualLabel.textContent = 'light';
   else if (q <= 85) qualLabel.textContent = 'web — ideal';
-  else if (q <= 95) qualLabel.textContent = 'alta calidad';
-  else qualLabel.textContent = 'sin pérdida';
+  else if (q <= 95) qualLabel.textContent = 'high quality';
+  else qualLabel.textContent = 'lossless';
 }
 
 function setFormat(fmt, btn) {
@@ -1162,9 +1162,9 @@ function renderList() {
 function updateStats() {
   const done = files.filter(f => f.status === 'done').length;
   const n = files.length;
-  if (n === 0) statsLabel.textContent = '0 imágenes';
-  else if (done > 0) statsLabel.textContent = `${done}/${n} convertidas`;
-  else statsLabel.textContent = n === 1 ? '1 imagen' : `${n} imágenes`;
+  if (n === 0) statsLabel.textContent = '0 images';
+  else if (done > 0) statsLabel.textContent = `${done}/${n} converted`;
+  else statsLabel.textContent = n === 1 ? '1 image' : `${n} images`;
   convertBtn.disabled = n === 0 || files.every(f => f.status === 'done');
 }
 
@@ -1247,7 +1247,7 @@ async function startConvert() {
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(zipBlob);
-    a.download = 'imagenes_convertidas.zip';
+    a.download = 'converted_images.zip';
     a.click();
   }
 
@@ -1255,6 +1255,6 @@ async function startConvert() {
 }
 
 // Init
-document.documentElement.lang = 'es';
+document.documentElement.lang = 'en';
 updateSliderGradient();
 </script>
