@@ -2,7 +2,7 @@
 
 Convertidor de imágenes en el navegador: WebP, PNG o JPG, con calidad ajustable, renombrado, redimensionado y descarga individual o en ZIP.
 
-Abre `img_converter_app.html` en el navegador (o sirve la carpeta con un servidor estático).
+Abre `index.html` en el navegador (o sirve la carpeta con un servidor estático). Con GitHub Pages, la app queda en la raíz del sitio.
 
 ## Uso
 
