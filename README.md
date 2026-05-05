@@ -2,7 +2,7 @@
 
 Convertidor de imágenes en el navegador: WebP, PNG o JPG, con calidad ajustable, renombrado, redimensionado y descarga individual o en ZIP.
 
-Abre `index.html` en el navegador (interfaz en **español**). La versión en **inglés** es `index-en.html`; en cada página hay un enlace arriba a la derecha para cambiar de idioma (carga el otro archivo, sin `localStorage`).
+Abre `index.html`: interfaz en **español** por defecto. Usa los botones **ES | EN** arriba a la derecha para cambiar **todo** el texto de la página (estadísticas, calidad, descarga ZIP, título del navegador, etc.). La URL puede llevar `?lang=en` o `?lang=es` para compartir en ese idioma. El archivo `index-en.html` solo redirige a `index.html?lang=en` por compatibilidad con enlaces antiguos.
 
 ## Uso
 

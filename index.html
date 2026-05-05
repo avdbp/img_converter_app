@@ -80,27 +80,30 @@
 }
 .app > * { position: relative; z-index: 1; }
 
-/* Titlebar */
+/* Titlebar — espacio simétrico para centrar el título */
 .titlebar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 11px 18px;
   border-bottom: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255,250,240,0.03) 0%, transparent 100%);
   user-select: none;
-  gap: 10px;
   flex-shrink: 0;
 }
-
-.dots { display: flex; gap: 7px; align-items: center; }
-.dot { width: 11px; height: 11px; border-radius: 50%; transition: transform 0.2s ease, filter 0.2s; }
-.dot:hover { transform: scale(1.08); filter: brightness(1.15); }
-.dot-r { background: #ff5f57; box-shadow: 0 0 6px rgba(255,95,87,0.4); }
-.dot-y { background: #febc2e; box-shadow: 0 0 6px rgba(254,188,46,0.35); }
-.dot-g { background: #28c840; box-shadow: 0 0 6px rgba(40,200,64,0.35); }
+.titlebar-edge {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.titlebar-edge:last-child {
+  justify-content: flex-end;
+}
 
 .app-title {
-  flex: 1;
+  flex: 0 0 auto;
   text-align: center;
   font-family: 'Space Mono', monospace;
   font-size: 11px;
@@ -110,29 +113,39 @@
   text-transform: uppercase;
 }
 
-/* Enlace a versión en inglés (archivo aparte) */
-.lang-link {
+/* ES | EN — actualiza toda la interfaz */
+.lang-switch {
   flex-shrink: 0;
-  font-family: 'Figtree', system-ui, sans-serif;
-  font-size: 12px;
+  display: flex;
+  background: var(--mist);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 3px;
+  gap: 2px;
+}
+.lang-switch-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
   font-weight: 700;
-  padding: 8px 16px;
-  border: 1px solid var(--accent-border);
-  border-radius: 10px;
-  background: var(--accent-dim);
-  color: #c4fff7;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.15s, background 0.15s, border-color 0.15s, box-shadow 0.15s;
-  box-shadow: 0 0 0 1px rgba(46,196,182,0.12) inset;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+  letter-spacing: 0.08em;
+  transition: color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.lang-link:hover {
-  color: #fff;
-  background: rgba(46, 196, 182, 0.28);
-  border-color: var(--accent);
-  box-shadow: 0 4px 18px var(--accent-glow);
+.lang-switch-btn:hover:not(.active) {
+  color: var(--text);
+  background: rgba(255, 252, 245, 0.05);
 }
-.lang-link:focus-visible {
+.lang-switch-btn.active {
+  background: var(--grad);
+  color: #041312;
+  box-shadow: 0 2px 12px var(--accent-glow), 0 1px 0 rgba(255,255,255,0.2) inset;
+}
+.lang-switch-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -867,13 +880,14 @@ input[type=file] { display: none; }
 
 <div class="app">
   <div class="titlebar">
-    <div class="dots">
-      <div class="dot dot-r"></div>
-      <div class="dot dot-y"></div>
-      <div class="dot dot-g"></div>
-    </div>
+    <div class="titlebar-edge" aria-hidden="true"></div>
     <div class="app-title" id="appTitle">WEBP — CONVERTIDOR</div>
-    <a href="index-en.html" class="lang-link" hreflang="en">Inglés</a>
+    <div class="titlebar-edge">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-switch-btn active" id="langBtnEs" onclick="setLocale('es')" aria-pressed="true">ES</button>
+        <button type="button" class="lang-switch-btn" id="langBtnEn" onclick="setLocale('en')" aria-pressed="false">EN</button>
+      </div>
+    </div>
   </div>
 
   <div class="body">
@@ -881,7 +895,7 @@ input[type=file] { display: none; }
 
       <!-- FORMAT -->
       <div class="sidebar-section">
-        <div class="section-label">Formato de salida</div>
+        <div class="section-label" data-i18n="section_output">Formato de salida</div>
         <div class="format-grid">
           <button type="button" class="format-btn active" onclick="setFormat('webp', this)">WebP</button>
           <button type="button" class="format-btn" onclick="setFormat('png', this)">PNG</button>
@@ -891,7 +905,7 @@ input[type=file] { display: none; }
 
       <!-- QUALITY -->
       <div class="sidebar-section">
-        <div class="section-label">Calidad</div>
+        <div class="section-label" data-i18n="section_quality">Calidad</div>
         <div class="quality-wrap">
           <div class="quality-display">
             <span class="quality-num" id="qualVal">82</span>
@@ -899,19 +913,19 @@ input[type=file] { display: none; }
           </div>
           <input type="range" id="qualSlider" min="10" max="100" step="1" value="82">
           <div class="preset-grid">
-            <button type="button" class="preset-btn" onclick="setQual(60, this)">60 — ligero</button>
-            <button type="button" class="preset-btn active" onclick="setQual(82, this)">82 — web</button>
-            <button type="button" class="preset-btn" onclick="setQual(90, this)">90 — alta</button>
-            <button type="button" class="preset-btn" onclick="setQual(100, this)">100 — max</button>
+            <button type="button" class="preset-btn" data-i18n="preset_60" onclick="setQual(60, this)">60 — ligero</button>
+            <button type="button" class="preset-btn active" data-i18n="preset_82" onclick="setQual(82, this)">82 — web</button>
+            <button type="button" class="preset-btn" data-i18n="preset_90" onclick="setQual(90, this)">90 — alta</button>
+            <button type="button" class="preset-btn" data-i18n="preset_100" onclick="setQual(100, this)">100 — max</button>
           </div>
         </div>
       </div>
 
       <!-- RENAME -->
       <div class="sidebar-section">
-        <div class="section-label">Renombrar</div>
+        <div class="section-label" data-i18n="section_rename">Renombrar</div>
         <label class="rename-header">
-          <span class="rename-header-label">Renombrar archivos</span>
+          <span class="rename-header-label" data-i18n="rename_header">Renombrar archivos</span>
           <span class="toggle-switch">
             <input type="checkbox" id="renameToggle" onchange="toggleRename()" checked>
             <span class="toggle-track"></span>
@@ -919,11 +933,11 @@ input[type=file] { display: none; }
         </label>
         <div id="renameFields" class="rename-fields">
           <div class="rename-row">
-            <span class="rename-label">Prefijo</span>
-            <input class="rename-input" type="text" id="prefixInput" placeholder="ej: foto_" oninput="renderList()">
+            <span class="rename-label" data-i18n="label_prefix">Prefijo</span>
+            <input class="rename-input" type="text" id="prefixInput" data-i18n-placeholder="placeholder_prefix" placeholder="ej: foto_" oninput="renderList()">
           </div>
           <div class="rename-row">
-            <span class="rename-label">Desde</span>
+            <span class="rename-label" data-i18n="label_from">Desde</span>
             <input class="rename-input" type="number" id="startNum" value="1" min="0" style="width:60px;flex:none;" oninput="renderList()">
           </div>
           <div class="rename-preview" id="renamePreview">1.webp, 2.webp, 3.webp…</div>
@@ -932,15 +946,15 @@ input[type=file] { display: none; }
 
       <!-- RESIZE -->
       <div class="sidebar-section">
-        <div class="section-label">Redimensionar</div>
+        <div class="section-label" data-i18n="section_resize">Redimensionar</div>
         <div class="resize-opts">
           <label class="resize-opt active" id="opt-none">
             <input type="radio" name="resize" value="none" checked onchange="setResize('none')">
-            <span>Sin cambios</span>
+            <span data-i18n="resize_none">Sin cambios</span>
           </label>
           <label class="resize-opt" id="opt-maxw">
             <input type="radio" name="resize" value="maxw" onchange="setResize('maxw')">
-            <span>Ancho máximo</span>
+            <span data-i18n="resize_maxw">Ancho máximo</span>
           </label>
           <div class="max-width-row" id="maxwRow" style="display:none">
             <input type="number" id="maxWidth" value="1920" min="100" max="9999">
@@ -948,14 +962,14 @@ input[type=file] { display: none; }
           </div>
           <label class="resize-opt" id="opt-50">
             <input type="radio" name="resize" value="50" onchange="setResize('50')">
-            <span>50% del original</span>
+            <span data-i18n="resize_50">50% del original</span>
           </label>
         </div>
       </div>
 
       <!-- ACCEPTED FORMATS -->
       <div class="sidebar-section sidebar-footer">
-        <div class="section-label">Formatos aceptados</div>
+        <div class="section-label" data-i18n="section_formats">Formatos aceptados</div>
         <div class="formats-chips">
           <span class="format-chip">JPG</span>
           <span class="format-chip">PNG</span>
@@ -965,7 +979,7 @@ input[type=file] { display: none; }
           <span class="format-chip">AVIF</span>
           <span class="format-chip">HEIC*</span>
         </div>
-        <div class="heic-note">*HEIC requiere conversión previa en macOS</div>
+        <div class="heic-note" data-i18n="heic_note">*HEIC requiere conversión previa en macOS</div>
       </div>
 
     </div>
@@ -977,8 +991,8 @@ input[type=file] { display: none; }
         <div class="drop-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <span class="drop-label">Arrastra imágenes aquí</span>
-        <span class="drop-sub">o haz clic para seleccionar</span>
+        <span class="drop-label" data-i18n="drop_title">Arrastra imágenes aquí</span>
+        <span class="drop-sub" data-i18n="drop_sub">o haz clic para seleccionar</span>
       </div>
 
       <div class="progress-bar-wrap" id="progressWrap">
@@ -989,12 +1003,12 @@ input[type=file] { display: none; }
 
       <div class="footer-bar">
         <span class="stats" id="statsLabel">0 imágenes</span>
-        <button type="button" class="btn-clear" onclick="clearAll()">Limpiar</button>
+        <button type="button" class="btn-clear" data-i18n="btn_clear" onclick="clearAll()">Limpiar</button>
         <div class="dl-mode">
-          <button type="button" class="dl-mode-btn active" onclick="setDlMode('individual', this)">↓ 1:1</button>
-          <button type="button" class="dl-mode-btn" onclick="setDlMode('zip', this)">↓ ZIP</button>
+          <button type="button" class="dl-mode-btn active" data-i18n="dl_each" onclick="setDlMode('individual', this)">↓ 1:1</button>
+          <button type="button" class="dl-mode-btn" data-i18n="dl_zip" onclick="setDlMode('zip', this)">↓ ZIP</button>
         </div>
-        <button type="button" class="btn-convert" id="convertBtn" onclick="startConvert()" disabled>Convertir →</button>
+        <button type="button" class="btn-convert" id="convertBtn" data-i18n="btn_convert" onclick="startConvert()" disabled>Convertir →</button>
       </div>
     </div>
   </div>
@@ -1002,6 +1016,159 @@ input[type=file] { display: none; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
+const I18N = {
+  es: {
+    appTitle_webp: 'WEBP — CONVERTIDOR',
+    appTitle_png: 'PNG — CONVERTIDOR',
+    appTitle_jpg: 'JPG — CONVERTIDOR',
+    doc_title_webp: 'Convertidor WebP',
+    doc_title_png: 'Convertidor PNG',
+    doc_title_jpg: 'Convertidor JPG',
+    section_output: 'Formato de salida',
+    section_quality: 'Calidad',
+    section_rename: 'Renombrar',
+    section_resize: 'Redimensionar',
+    section_formats: 'Formatos aceptados',
+    rename_header: 'Renombrar archivos',
+    label_prefix: 'Prefijo',
+    label_from: 'Desde',
+    placeholder_prefix: 'ej: foto_',
+    resize_none: 'Sin cambios',
+    resize_maxw: 'Ancho máximo',
+    resize_50: '50% del original',
+    heic_note: '*HEIC requiere conversión previa en macOS',
+    drop_title: 'Arrastra imágenes aquí',
+    drop_sub: 'o haz clic para seleccionar',
+    btn_clear: 'Limpiar',
+    btn_convert: 'Convertir →',
+    dl_each: '↓ Cada archivo',
+    dl_zip: '↓ ZIP',
+    stats_0: '0 imágenes',
+    stats_done: '{done}/{total} convertidas',
+    stats_one: '{n} imagen',
+    stats_many: '{n} imágenes',
+    quality_light: 'ligero',
+    quality_web: 'web — ideal',
+    quality_high: 'alta calidad',
+    quality_lossless: 'sin pérdida',
+    preset_60: '60 — ligero',
+    preset_82: '82 — web',
+    preset_90: '90 — alta',
+    preset_100: '100 — max',
+    zip_filename: 'imagenes_convertidas.zip',
+    preview_sep: ', ',
+    preview_ellipsis: '…',
+  },
+  en: {
+    appTitle_webp: 'WEBP — CONVERTER',
+    appTitle_png: 'PNG — CONVERTER',
+    appTitle_jpg: 'JPG — CONVERTER',
+    doc_title_webp: 'WebP converter',
+    doc_title_png: 'PNG converter',
+    doc_title_jpg: 'JPG converter',
+    section_output: 'Output format',
+    section_quality: 'Quality',
+    section_rename: 'Rename',
+    section_resize: 'Resize',
+    section_formats: 'Accepted formats',
+    rename_header: 'Rename files',
+    label_prefix: 'Prefix',
+    label_from: 'Start at',
+    placeholder_prefix: 'e.g. photo_',
+    resize_none: 'Original size',
+    resize_maxw: 'Max width',
+    resize_50: '50% of original',
+    heic_note: '*HEIC may need prior conversion on macOS',
+    drop_title: 'Drop images here',
+    drop_sub: 'or click to browse',
+    btn_clear: 'Clear',
+    btn_convert: 'Convert →',
+    dl_each: '↓ Each file',
+    dl_zip: '↓ ZIP',
+    stats_0: '0 images',
+    stats_done: '{done}/{total} converted',
+    stats_one: '{n} image',
+    stats_many: '{n} images',
+    quality_light: 'light',
+    quality_web: 'web — ideal',
+    quality_high: 'high quality',
+    quality_lossless: 'lossless',
+    preset_60: '60 — light',
+    preset_82: '82 — web',
+    preset_90: '90 — high',
+    preset_100: '100 — max',
+    zip_filename: 'converted_images.zip',
+    preview_sep: ', ',
+    preview_ellipsis: '…',
+  },
+};
+
+let locale = 'es';
+try {
+  if (new URLSearchParams(window.location.search).get('lang') === 'en') locale = 'en';
+} catch (e) {}
+
+function t(key, vars = {}) {
+  const table = I18N[locale] || I18N.es;
+  let str = table[key] !== undefined ? table[key] : (I18N.es[key] ?? key);
+  Object.entries(vars).forEach(([k, v]) => {
+    str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), v);
+  });
+  return str;
+}
+
+function refreshQualityLabel() {
+  const q = quality;
+  if (q <= 65) qualLabel.textContent = t('quality_light');
+  else if (q <= 85) qualLabel.textContent = t('quality_web');
+  else if (q <= 95) qualLabel.textContent = t('quality_high');
+  else qualLabel.textContent = t('quality_lossless');
+}
+
+function updateAppTitle() {
+  document.getElementById('appTitle').textContent = t('appTitle_' + outputFormat);
+}
+
+function syncDocTitle() {
+  document.title = t('doc_title_' + outputFormat);
+}
+
+function applyLocale() {
+  document.documentElement.lang = locale === 'es' ? 'es' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (k) el.textContent = t(k);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const k = el.getAttribute('data-i18n-placeholder');
+    if (k) el.placeholder = t(k);
+  });
+  const langBtnEs = document.getElementById('langBtnEs');
+  const langBtnEn = document.getElementById('langBtnEn');
+  if (langBtnEs && langBtnEn) {
+    langBtnEs.classList.toggle('active', locale === 'es');
+    langBtnEn.classList.toggle('active', locale === 'en');
+    langBtnEs.setAttribute('aria-pressed', locale === 'es' ? 'true' : 'false');
+    langBtnEn.setAttribute('aria-pressed', locale === 'en' ? 'true' : 'false');
+  }
+  refreshQualityLabel();
+  updateAppTitle();
+  syncDocTitle();
+  updateStats();
+  updatePreview();
+}
+
+function setLocale(lang) {
+  if ((lang !== 'es' && lang !== 'en') || lang === locale) return;
+  locale = lang;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', locale);
+    history.replaceState(null, '', url.pathname + url.search + url.hash);
+  } catch (e) {}
+  applyLocale();
+}
+
 let files = [];
 let quality = 82;
 let resizeMode = 'none';
@@ -1038,7 +1205,8 @@ function updatePreview() {
   const prefix = document.getElementById('prefixInput').value;
   const start = parseInt(document.getElementById('startNum').value) || 1;
   const ext = getExt();
-  preview.textContent = `${prefix}${start}.${ext}, ${prefix}${start+1}.${ext}, ${prefix}${start+2}.${ext}…`;
+  const sep = t('preview_sep');
+  preview.textContent = `${prefix}${start}.${ext}${sep}${prefix}${start + 1}.${ext}${sep}${prefix}${start + 2}.${ext}${t('preview_ellipsis')}`;
 }
 
 function toggleRename() {
@@ -1048,24 +1216,12 @@ function toggleRename() {
   renderList();
 }
 
-function updateAppTitle() {
-  const titles = { webp: 'WEBP — CONVERTIDOR', png: 'PNG — CONVERTIDOR', jpg: 'JPG — CONVERTIDOR' };
-  document.getElementById('appTitle').textContent = titles[outputFormat];
-}
-
-function refreshQualityLabel() {
-  const q = quality;
-  if (q <= 65) qualLabel.textContent = 'ligero';
-  else if (q <= 85) qualLabel.textContent = 'web — ideal';
-  else if (q <= 95) qualLabel.textContent = 'alta calidad';
-  else qualLabel.textContent = 'sin pérdida';
-}
-
 function setFormat(fmt, btn) {
   outputFormat = fmt;
   document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateAppTitle();
+  syncDocTitle();
   updatePreview();
   renderList();
 }
@@ -1170,9 +1326,9 @@ function renderList() {
 function updateStats() {
   const done = files.filter(f => f.status === 'done').length;
   const n = files.length;
-  if (n === 0) statsLabel.textContent = '0 imágenes';
-  else if (done > 0) statsLabel.textContent = `${done}/${n} convertidas`;
-  else statsLabel.textContent = n === 1 ? '1 imagen' : `${n} imágenes`;
+  if (n === 0) statsLabel.textContent = t('stats_0');
+  else if (done > 0) statsLabel.textContent = t('stats_done', { done: String(done), total: String(n) });
+  else statsLabel.textContent = n === 1 ? t('stats_one', { n: String(n) }) : t('stats_many', { n: String(n) });
   convertBtn.disabled = n === 0 || files.every(f => f.status === 'done');
 }
 
@@ -1255,7 +1411,7 @@ async function startConvert() {
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(zipBlob);
-    a.download = 'imagenes_convertidas.zip';
+    a.download = t('zip_filename');
     a.click();
   }
 
@@ -1263,6 +1419,7 @@ async function startConvert() {
 }
 
 // Init
+applyLocale();
 updateSliderGradient();
 </script>
 </body>
